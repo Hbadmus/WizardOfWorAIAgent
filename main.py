@@ -32,7 +32,7 @@ def main():
     env = gym.make("ALE/WizardOfWor-v5", render_mode=rendering, obs_type='grayscale')
     # env = gym.wrappers.AtariPreprocessing(env, screen_size=128, grayscale_obs=True, noop_max=30, max_pool_frames=2)
     env = gym.wrappers.ResizeObservation(env, (100, 128))
-    env = gym.wrappers.FrameStackObservation(env, 8)
+    env = gym.wrappers.FrameStackObservation(env, 4)
     obs, info = env.reset()
     obs = obs[:, 10:68, :]
 
@@ -59,14 +59,14 @@ def main():
             total_steps += 1
             if total_steps % 300 == 0:
                 x = state_tensor
-                fig, ax = plt.subplots(len(dqn.conv_layers), 64, figsize=(100, 20))
+                fig, ax = plt.subplots(len(dqn.conv_layers), 16, figsize=(20, 4))
                 for i, layer in enumerate(dqn.conv_layers):
                     data = x.cpu().detach()[0]
                     
                     for j, x_i in enumerate(data):
                         if data.ndim == 3:
                             ax[i][j].imshow(x_i, cmap="gray")
-                    for j in range(64):
+                    for j in range(16):
                         ax[i][j].axis('off')
                     x = layer(x)
                 print('saving')

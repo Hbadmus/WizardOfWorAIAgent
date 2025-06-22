@@ -32,9 +32,9 @@ class DQN(nn.Module):
       
     # Linear Layers (hidden and action layers)
     self.fc_layers = nn.Sequential(
-      nn.Linear(5336 + 0, 1024),  
+      nn.Linear(5336 + 0, 256),  
       nn.ReLU(),
-      nn.Linear(1024, 512),   
+      nn.Linear(256, 512),   
       # nn.ReLU(),
       # nn.Linear(512, 512),  
       nn.ReLU(),

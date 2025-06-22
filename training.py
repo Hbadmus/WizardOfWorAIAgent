@@ -16,7 +16,7 @@ gym.register_envs(ale_py)
 env = gym.make("ALE/WizardOfWor-v5", obs_type="grayscale")
 
 env = gym.wrappers.ResizeObservation(env, (100, 128))
-env = gym.wrappers.FrameStackObservation(env, 8)
+env = gym.wrappers.FrameStackObservation(env, 4)
 
 ale = env.unwrapped.ale
 
@@ -51,17 +51,17 @@ def calculate_reward(base_reward, action, info, last_info):
         
     if info["lives"] < last_info["lives"]:
         # print("died")
-        reward -= 200.0
+        reward -= 100.0
 
     #put the shooting peneties here
     # no shooting penelties right now
     return reward / 50
 
 # training with 64 concurrent episodes, uses DQN and Replay Buffer Implementation
-def train(batch_size=64, gamma=0.5, epsilon=1, decay=.995, max_episodes=10000, min_epsilon=0.1, max_episode_steps=18000, load_checkpoint = False):
+def train(batch_size=64, gamma=0.5, epsilon=1, decay=.999, max_episodes=10000, min_epsilon=0.5, max_episode_steps=18000, load_checkpoint = False):
     # init replay buffer with 10k size
     episode_rewards = []
-    replay_buffer = ReplayBuffer(100000) 
+    replay_buffer = ReplayBuffer(500000) 
 
     policy_nn = DQN(state_size, env.action_space.n, device).to(device)
     target_nn = DQN(state_size, env.action_space.n, device).to(device)
@@ -120,8 +120,6 @@ def train(batch_size=64, gamma=0.5, epsilon=1, decay=.995, max_episodes=10000, m
 
                 
             reward = calculate_reward(reward, action, new_info, info)
-            # if reward > 50:
-            #     print(reward)
 
             # scales reward
             clipped_reward = np.clip(reward, -250, 250)
@@ -129,7 +127,9 @@ def train(batch_size=64, gamma=0.5, epsilon=1, decay=.995, max_episodes=10000, m
             # adds to buffer
             normalized_new_obs = np.array(new_obs, dtype=np.float32) / 255.0
            
+            # if total_steps % 20 == 0:
             # store the experience in the replay buffer
+            t = time.time()
             replay_buffer.add(normalized_obs, action, clipped_reward, normalized_new_obs)
             
             new_obs = np.array(new_obs)
@@ -220,7 +220,7 @@ def train(batch_size=64, gamma=0.5, epsilon=1, decay=.995, max_episodes=10000, m
     return policy_nn
 
 start_time = time.time()
-dqn = train(max_episodes=1000, load_checkpoint = False)
+dqn = train(max_episodes=10000, load_checkpoint = False)
 
 #run this on sharyq gpu when confident it all works
 #dqn = train(batch_size=256, max_episodes=15000, load_checkpoint = False)
