@@ -58,10 +58,10 @@ def calculate_reward(base_reward, action, info, last_info):
     return reward / 50
 
 # training with 64 concurrent episodes, uses DQN and Replay Buffer Implementation
-def train(batch_size=64, gamma=0.5, epsilon=1, decay=.999, max_episodes=10000, min_epsilon=0.5, max_episode_steps=18000, load_checkpoint = False):
+def train(batch_size=64, gamma=0.99, epsilon=1, decay=.999, max_episodes=10000, min_epsilon=0.5, max_episode_steps=18000, load_checkpoint = False):
     # init replay buffer with 10k size
     episode_rewards = []
-    replay_buffer = ReplayBuffer(500000) 
+    replay_buffer = ReplayBuffer(100000) 
 
     policy_nn = DQN(state_size, env.action_space.n, device).to(device)
     target_nn = DQN(state_size, env.action_space.n, device).to(device)
