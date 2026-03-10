@@ -58,10 +58,6 @@ The agent achieved near-complete level completion across consistent training run
 
 Reward engineering is fundamentally a design problem. The math matters, but the harder question is always: *what behavior do you actually want, and are your rules producing it?* Watching the agent fail in unexpected ways — and tracing that failure back to an incentive misalignment — was the most valuable part of the process.
 
-# Wizard of Wor AI
-
-A Project for our Artificial Intelligence Class: Building an AI that can beat the classic Atari 2600 game, Wizard of Wor.
-
 
 ## Authors
 
